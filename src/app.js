@@ -2,7 +2,7 @@ import  express  from "express";
 import {PORT} from "./constant.js"
 import cookieParser from "cookie-parser";
 import cors from "cors"
-import {CORS_ORIGIN} from "../constant.js"
+import {CORS_ORIGIN} from "./constant.js"
 
 const app=express();
 
