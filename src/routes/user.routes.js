@@ -6,6 +6,4 @@ console.log("Inside User Routes")
 
 export default router
 
-router.route("/l").get((req,res)=>{
-res.send("hello")
-});
+router.route("/l").get(registorUser);
