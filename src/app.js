@@ -22,4 +22,4 @@ app.use(bodyParser.urlencoded());
 
 import userRoutes from "./routes/user.routes.js"
 
-app.use("/u",userRoutes);
+app.use("/user",userRoutes);

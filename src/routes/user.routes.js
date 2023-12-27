@@ -6,4 +6,4 @@ console.log("Inside User Routes")
 
 export default router
 
-router.route("/l").get(registorUser);
+router.route("/login").get(registorUser);
