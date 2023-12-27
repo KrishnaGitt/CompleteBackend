@@ -1,10 +1,11 @@
 import {asyncHandler} from "../utils/asyncHandler.js"
 console.log("userControllr-----------------------");
-const registorUser=(async(req,res)=>{
+const registorUser=asyncHandler((req, res) => {
     console.log("userControllr-----------------------");
     res.status(200).json({
         message:"hello"
     })
 })
 
+ 
 export {registorUser}
