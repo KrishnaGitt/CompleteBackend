@@ -1,7 +1,7 @@
 import mongoose ,{Schema} from "mongoose";
 import bcrypt from "bcrypt"
 import { Jwt } from "jsonwebtoken";
-import constant from "../constant";
+import {REFRESH_TOKEN_EXPIRY,REFRESH_TOKEN_SECREAT,ACCESS_TOKEN_EXPIRY,ACCESS_TOKEN_SECREAT} from "../constant";
 
 const userSchema=new Schema({
 username:{
