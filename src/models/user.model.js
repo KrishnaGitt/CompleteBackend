@@ -12,7 +12,7 @@ username:{
     trim:true,
     index:true
 },
-username:{
+email:{
     type:String,
     required:true,
     lowercase:true,
@@ -47,11 +47,11 @@ refreshToken:{
 }
 },{timestamps:true})
 
-userSchema.pre("save",async function(){
-    if(!this.isModified("password")) return next();
-    this.password=bcrypt.hash(this.password,10)
-    next();
-})
+// userSchema.pre("save",async function(){
+//     if(!this.isModified("password")) return next();
+//     this.password=bcrypt.hash(this.password,10)
+//     next();
+// })
 
 userSchema.methods.isPasswordCorrect=async function(passsword){
     return await bcrypt.compare(passsword,this.passsword);

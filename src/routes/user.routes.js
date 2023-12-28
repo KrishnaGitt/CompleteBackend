@@ -2,7 +2,6 @@ import { Router } from "express";
 import {registorUser} from "../controllers/user.controller.js"
 import { upload } from "../middleware/multer.midleware.js";
 const router=Router();
-console.log("Inside User Routes")
 
 // router.route("/l").get(registorUser);
 
