@@ -1,10 +1,11 @@
 import {asyncHandler} from "../utils/asyncHandler.js"
 import {ApiError} from "../utils/ApiError.js"
+import {ApiResponse} from "../utils/ApiResponse.js"
 import {User} from "../models/user.model.js"
 import { uploadCloudinary } from "../utils/cloudinary.js"
 
 
-const registorUser=asyncHandler((req, res) => {
+const registorUser=asyncHandler(async(req, res) => {
 //get user details
 //validation not empty
 //if user exits  email||username
@@ -42,16 +43,25 @@ const coverImage=uploadCloudinary(coverImageLocalPath)
 if(!avatar){
     throw new ApiError(400,"avatar is not added sucessfully")
 }
-User.create({
+const user=await User.create({
     fullname,
     avatar:avatar.url,
     coverImage:coverImage?.url,
     username,
     email,
     password,
-    
 })
+const createdUser=await User.findById(user._id).select(
+    "-password -refreshToken"
+);
+if(!createdUser){
+    throw new ApiError(400,"Could created the user please your code")
+}
 
+return res.status(201).json(
+    new ApiResponse(200,createdUser,"Data inserted sycessfully in data base")
+
+)
 })
 
 
