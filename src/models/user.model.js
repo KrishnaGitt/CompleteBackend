@@ -1,7 +1,7 @@
 import mongoose ,{Schema} from "mongoose";
 import bcrypt from "bcrypt"
-import { Jwt } from "jsonwebtoken";
-import {REFRESH_TOKEN_EXPIRY,REFRESH_TOKEN_SECREAT,ACCESS_TOKEN_EXPIRY,ACCESS_TOKEN_SECREAT} from "../constant";
+//import { Jwt } from "jsonwebtoken";
+import {REFRESH_TOKEN_EXPIRY,REFRESH_TOKEN_SECREAT,ACCESS_TOKEN_EXPIRY,ACCESS_TOKEN_SECREAT} from "../constant.js";
 
 const userSchema=new Schema({
 username:{
@@ -43,7 +43,7 @@ password:{
     required:[true,"passsword is required"]
 },
 refreshToken:{
-    type:string
+    type:String
 }
 },{timestamps:true})
 
