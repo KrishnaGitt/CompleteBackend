@@ -25,25 +25,34 @@ if(
 const exitedUser=await User.findOne({
     $or:[{email},{username}]
 })
+console.log("------------user from database",exitedUser);
 if(exitedUser){
     throw new ApiError(409,"User existeddddd ")
 }
 
 const avatarLocalPath=req.files?.avatar[0]?.path;
 console.log(avatarLocalPath)
+
 // const coverImageLocalPath=req.files?.coverImage[0]?.path;
 console.log(req.files);
 if(!avatarLocalPath){
     throw new ApiError(400,"Avatar file is required");
 }
+// if(req.files&&Array.isArray(req.files.coverImage)&&req.file.coverImag.length>0){
+    
+// }else{
+//     throw new ApiError(404,"file not able to upload");
+// }
+
 // add await and async
 const avatar=await uploadCloudinary(avatarLocalPath)
-//console.log(avatar)
-// const coverImage=await uploadCloudinary(coverImageLocalPath)
+console.log(avatar)
 
-// if(!avatar){
-//     throw new ApiError(400,"avatar is not added sucessfully")
-// }
+// const coverImage=await uploadCloudinary(coverImageLocalPath)
+// 
+if(!avatar){
+    throw new ApiError(400,"avatar is not added sucessfully")
+}
 const user=await User.create({
     fullname,
     avatar:avatar?.url,
@@ -65,9 +74,60 @@ if(!createdUser){
 )
 })
 
+const loginUser=asyncHandler(async(req, res) => {
+    //req.body
+    //verify-username/email
+    //find the user
+    //password check
+    //refresh and acees token
+    //send cokkies
+
+    const {username,email,password}=req.body
+    if(!(username||email)){
+        throw new ApiError(400,"User name or email is required")
+    }
+    const userDataBase=User.findOne({
+        $or:[{email},{username}]
+    })
+    console.log("------------user from database",userDataBase);
+    if(!userDataBase){
+        throw new ApiError(400,"User does not exits")
+    }
+    const isPasswordValid=userDataBase.isPasswordCorrect(password);
+
+    if(!isPasswordValid){
+        throw new ApiError(400,"Password is  not valid")
+    }
+    const {acessToken,refreshToken}= await generateAcessAndRefreshToken()
+    const loggedInUser=await User.findById(userDataBase._id);
+     const option={
+        httpOnly:true,
+        secure:true
+    }
+    return res.
+    status(200).
+    cookie("acessToken",acessToken,option).
+    cookie("refreshToken",refreshToken,option).
+    json(
+        new ApiResponse({
+            user:loggedInUser,acessToken,
+            refreshToken
+        })
+    )
+})
 
 
-
+const generateAcessAndRefreshToken=async(userId)=>{
+    try {
+        const acessToken=userDataBase.generateAcessToken();
+        const refreshToken=userDataBase.generateRefreshToken();
+        userDataBase.refreshToken=refreshToken;
+        await userDataBase.save({validateBeforeSave:false})
+        return {acessToken,refreshToken}
+    } catch (error) {
+        throw new ApiError(500,"Error Whiler genrating access token")
+    }
+};
 
 
 
@@ -84,4 +144,4 @@ if(!createdUser){
 
 
  
-export {registorUser}
+export {registorUser,loginUser}
