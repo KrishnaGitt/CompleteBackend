@@ -94,7 +94,6 @@ const loginUser=asyncHandler(async(req, res) => {
         throw new ApiError(400,"User does not exits")
     }
     const isPasswordValid= await userDataBase.isPasswordCorrect(password);
-    console.log("0000000000000",isPasswordValid);
     if(!isPasswordValid){
         throw new ApiError(400,"Password is  not valid")
     }
@@ -104,10 +103,9 @@ const loginUser=asyncHandler(async(req, res) => {
         httpOnly:true,
         secure:true
     }
-    return res.
-    status(200).
-    // cookie("acessToken",acessToken,option).
-    cookie("refreshToken",refreshToken,option).
+    
+    res.cookie("acessToken",acessToken).
+    cookie("refreshToken",refreshToken).
     json(
         new ApiResponse(200,{
             user:loggedInUser
@@ -123,7 +121,6 @@ const generateAcessAndRefreshToken=async(userId)=>{
     try {
         const userDataBase=await User.findById(userId)
         const acessToken=userDataBase.generateAcessToken();
-        console.log("acces-----",acessToken);
         const refreshToken=userDataBase.generateRefreshToken();
         userDataBase.refreshToken=refreshToken;
          await userDataBase.save({validateBeforeSave:false})
