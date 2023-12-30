@@ -98,7 +98,7 @@ const loginUser=asyncHandler(async(req, res) => {
     if(!isPasswordValid){
         throw new ApiError(400,"Password is  not valid")
     }
-    const {refreshToken}= await generateAcessAndRefreshToken(userDataBase._id)
+    const {acessToken,refreshToken}= await generateAcessAndRefreshToken(userDataBase._id)
     const loggedInUser=await User.findById(userDataBase._id);
      const option={
         httpOnly:true,
@@ -110,7 +110,7 @@ const loginUser=asyncHandler(async(req, res) => {
     cookie("refreshToken",refreshToken,option).
     json(
         new ApiResponse(200,{
-            user:loggedInUser,loggedInUser
+            user:loggedInUser
 
         },
         "logged in sucessfully"
@@ -122,11 +122,12 @@ const loginUser=asyncHandler(async(req, res) => {
 const generateAcessAndRefreshToken=async(userId)=>{
     try {
         const userDataBase=await User.findById(userId)
-        // const acessToken=userDataBase.generateAcessToken();
+        const acessToken=userDataBase.generateAcessToken();
+        console.log("acces-----",acessToken);
         const refreshToken=userDataBase.generateRefreshToken();
         userDataBase.refreshToken=refreshToken;
          await userDataBase.save({validateBeforeSave:false})
-        return {refreshToken}
+        return {acessToken,refreshToken}
     } catch (error) {
         throw new ApiError(500,"Error Whiler genrating access token")
     }
