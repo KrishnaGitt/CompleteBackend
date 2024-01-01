@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {registorUser,loginUser,logoutUser,reshAccessToken} from "../controllers/user.controller.js"
+import {registorUser,loginUser,logoutUser,reshAccessToken,changePassword} from "../controllers/user.controller.js"
 import { upload } from "../middleware/multer.midleware.js";
 import {verifyJWT} from "../middleware/auth.middleware.js" 
 const router=Router();
@@ -28,4 +28,8 @@ router.route("/logout").post(
 
 router.route("/refreshToken").post(
     reshAccessToken);
-        
+
+    router.route("/changePassword").post(
+        verifyJWT,
+        changePassword);
+            

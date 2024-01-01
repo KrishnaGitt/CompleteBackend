@@ -191,6 +191,28 @@ const reshAccessToken = asyncHandler(async (req, res) => {
         )
 })
 
+const changePassword=asyncHandler(async(req,res)=>{
+    const{oldpassword,newpassword}=req.body
+    console.log("--oldpassword----",oldpassword)
+    console.log("---newpassword---",newpassword)
+
+    const user=await User.findById(req.user._id);
+    const passwordflag= await user.isPasswordCorrect(oldpassword)
+    console.log("--passwordflag----",passwordflag)
+    if(!passwordflag){
+        throw new ApiError(200,"Please enter correct old password")
+    }
+    
+    user.password=newpassword;
+    await user.save({validateBeforeSave: false})
+    console.log(" user.password--", user.password)
+    res.status(200).json(
+         new ApiResponse(200,{
+            user
+        },
+        "password changed suceesfully")
+    )
+})
 
 
 
@@ -202,4 +224,5 @@ const reshAccessToken = asyncHandler(async (req, res) => {
 
 
 
-export { registorUser, loginUser, logoutUser,reshAccessToken }
+
+export { registorUser, loginUser, logoutUser,reshAccessToken,changePassword }
