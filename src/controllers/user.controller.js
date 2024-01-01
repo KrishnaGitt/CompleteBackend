@@ -215,6 +215,28 @@ const changePassword=asyncHandler(async(req,res)=>{
 })
 
 
+const changeAvatar=asyncHandler(async(req,res)=>{
+    const localPath=req.file.path;
+    if(!localPath){
+        throw new ApiError(400,"Please upload the file");
+    }
+    const avatar = await uploadCloudinary(localPath)
+
+    if(!avatar){
+        throw new ApiError(400,"Not able upload it cloudinary site")
+    }
+    const user=await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set:{avatar:avatar.url}
+        }
+    )
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, user,"Avatar image updated successfully")
+    )
+})
 
 
 
@@ -224,5 +246,4 @@ const changePassword=asyncHandler(async(req,res)=>{
 
 
 
-
-export { registorUser, loginUser, logoutUser,reshAccessToken,changePassword }
+export { registorUser, loginUser, logoutUser,reshAccessToken,changePassword, changeAvatar}
